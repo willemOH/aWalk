@@ -2,17 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Segment
+public struct TreeSeg //segment of tree made from one bezier curve
 {
-    internal Segment(Bezier path, Ring[] vertices)
+    public TreeSeg(int subDivX, int subDivY, Bezier bezPath)
     {
-        P1 = path.P1;
-        P2 = path.P2;
-        P3 = path.P3;
-        P4 = path.P4;
+
+        TreeRing[] segment = new TreeRing[subDivX];
+        float Xincrement = 1 / subDivX; // increments along Segment curve
+        for (int i = 0; i <= subDivX - 1; i++)
+        {
+            Vector3 curvePoint = bezPath.Curve(i * Xincrement);
+            Vector3 curvePerpendicularTangent = Quaternion.Euler(0, 0, 90) * bezPath.CurveTanNVec(); //find out what value this give me
+            segment[i] = new TreeRing(subDivY, curvePoint, curvePerpendicularTangent);
+        }
+
+        P1 = bezPath.P1;
+        P2 = bezPath.P2;
+        P3 = bezPath.P3;
+        P4 = bezPath.P4;
 
 
-        ringVerts = vertices;
+        ringVerts = segment;
 
         ringsNum = ringVerts.Length;
         vertsNum = ringVerts[0].verts.Length;
@@ -25,7 +35,7 @@ public struct Segment
     public Vector3 P3 { get; }
     public Vector3 P4 { get; }
 
-    public Ring[] ringVerts { get; } //subdimension contains a set of verts forming a ring
+    public TreeRing[] ringVerts { get; } //subdimension contains a set of verts forming a ring
                                      //around point on Segment curve 
                                      //float[] tDistributions; //t_values where the rings will be put along the curve(t)
 
@@ -33,34 +43,5 @@ public struct Segment
     public int vertsNum { get; }
     public int vertsInSeg { get; }
 }
-public class TreeSeg
 
-{ 
-    public int subDivY;
-    public int subDivX;
-    Bezier bez;
 
-    public TreeSeg(int subDivisionsX, int subDivisionsY, Bezier bezierPath)
-    {
-        subDivY = subDivisionsY;
-        subDivX = subDivisionsX;
-        bez = bezierPath;
-    }
-   
-    public Segment NewSegment() //generates array of Ring structs containing vertex placement for each ring and curve data for one Segment
-    {
-        Ring[] segments = new Ring[subDivX];
-        float Xincrement = 1 / subDivX; // increments along Segment curve
-        TreeRing ring = new TreeRing(subDivY);
-        for (int i = 0; i <= subDivX - 1; i++)
-        {
-            Vector3 curvePoint = bez.Curve(i * Xincrement);
-            Vector3 curvePerpendicularTangent = Quaternion.Euler(0, 0, 90) * bez.CurveTanNVec(); //find out what value this give me
-            segments[i] = ring.NewRing(curvePoint, curvePerpendicularTangent);
-        }
-        return new Segment(bez, segments);
-    }
-
-    
-
-}

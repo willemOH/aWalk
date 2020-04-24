@@ -4,11 +4,11 @@ using UnityEngine;
 
 public struct Tree
 {
-    internal Tree(List<Segment> treeSeg)
+    internal Tree(List<TreeSeg> treeSeg)
     {
         segList = treeSeg;
     }
-    List<Segment> segList { get; }
+    List<TreeSeg> segList { get; }
 
 
 }
@@ -18,7 +18,7 @@ public struct Tree
 
 public class TreeRandom : MonoBehaviour
 {
-    List<Segment> treeSegs = new List<Segment>(); //tree Segments
+    List<TreeSeg> treeSegs = new List<TreeSeg>(); //tree TreeSegs
     public BezierPathGen pthGen;
     public Mesh Tree;
     GameObject treeObject;
@@ -26,7 +26,7 @@ public class TreeRandom : MonoBehaviour
 
     [HideInInspector]
     public int segNum=0;
-    public int subdivX=0; //# of Segment rings
+    public int subdivX=0; //# of TreeSeg rings
     public int subdivY=0;
 
     /* can't do constructor with components because of monobehavior and adding values seperate from void Start
@@ -48,10 +48,10 @@ public class TreeRandom : MonoBehaviour
 
     IEnumerator generateTreeMesh()
     {
-        //gen = new TreeGen(Number_of_Segments, Rings_Y, Rings_X);
+        //gen = new TreeGen(Number_of_TreeSegs, Rings_Y, Rings_X);
         for (int i = 0; i <= segNum - 1; i++)
         {
-            addSegment(pthGen.pth);
+            addTreeSeg(pthGen.pth);
             pthGen.newCurvePoints();
         }
 
@@ -105,10 +105,10 @@ public class TreeRandom : MonoBehaviour
         }
         return uvs;
     }
-    public Vector3[] meshVerts() //retrieve list of all verts in every Segment for entire tree mesh creation
+    public Vector3[] meshVerts() //retrieve list of all verts in every TreeSeg for entire tree mesh creation
     {
-        Vector3[] verts = new Vector3[treeSegs.Count * treeSegs[0].vertsInSeg]; //Segments * verts in Segments = total # verts in Segment
-        Segment sGeneric = treeSegs[0]; //all Segments should have same vertex count data - using count of data from first seg for all segs
+        Vector3[] verts = new Vector3[treeSegs.Count * treeSegs[0].vertsInSeg]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
+        TreeSeg sGeneric = treeSegs[0]; //all TreeSegs should have same vertex count data - using count of data from first seg for all segs
         for (int i = 0; i <= treeSegs.Count - 1; i++)
         {
             for (int j = 0; j <= sGeneric.ringsNum - 1; j++)
@@ -123,10 +123,10 @@ public class TreeRandom : MonoBehaviour
         return verts;
     }
 
-    public void addSegment(Bezier path)
+    public void addTreeSeg(Bezier path)
     {
         TreeSeg seg = new TreeSeg(subdivX, subdivX, path);
-        treeSegs.Add(seg.NewSegment());
+        treeSegs.Add(seg);
     }
 
     

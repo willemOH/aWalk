@@ -37,8 +37,7 @@ namespace Tests
             testBez.P4 = new Vector3(2, 0, 0);
             */
             Vector3 perpendicularVec = new Vector3(1, 0, 0);
-            ring.subdivY = tree.subdivY;
-            Ring testRing = ring.NewRing(new Vector3(0,1,0), perpendicularVec); //simulated point along curve
+            TreeRing testRing = new TreeRing(tree.subdivY, new Vector3(0,1,0), perpendicularVec); //simulated point along curve
                                                                                //point and point on 90 degrees axis to other point
             float Yincrement = 360 / tree.subdivY;
             Assert.AreEqual(testRing.verts[0], new Vector3(1, 1, 0));
