@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public struct Tree
 {
     internal Tree(List<TreeSeg> treeSeg)
@@ -12,9 +13,9 @@ public struct Tree
 
 
 }
+*/
+
 [RequireComponent(typeof(BezierPathGen))]
-[RequireComponent(typeof(TreeSeg))]
-[RequireComponent(typeof(TreeRing))]
 
 public class TreeRandom : MonoBehaviour
 {
@@ -24,10 +25,11 @@ public class TreeRandom : MonoBehaviour
     GameObject treeObject;
     public Vector3[] Verts; //verts arranged for mesh formation
 
-    [HideInInspector]
+   // [HideInInspector] to uncomment when testng is over
     public int segNum=0;
     public int subdivX=0; //# of TreeSeg rings
     public int subdivY=0;
+
 
     /* can't do constructor with components because of monobehavior and adding values seperate from void Start
     public TreeRandom(int seg, int divY, int divX)
@@ -43,15 +45,21 @@ public class TreeRandom : MonoBehaviour
     }
     private void Start()
     {
+        //need to ENABLE TREE IN BEZPATHGEN 
         StartCoroutine("generateTreeMesh");
+        if (segNum == 0 || subdivX == 0 || subdivY == 0)
+        {
+            throw new ArgumentException("segNum subdivX or subdivY cannot be zero");
+        }
     }
+
 
     IEnumerator generateTreeMesh()
     {
         //gen = new TreeGen(Number_of_TreeSegs, Rings_Y, Rings_X);
         for (int i = 0; i <= segNum - 1; i++)
         {
-            addTreeSeg(pthGen.pth);
+            addTreeSeg(pthGen.pth); //.pth is not being populated with p1 values my last guess was that BezierPathGen was not init Ps before this function but replaceing Start witht Awake() with  didn't help
             pthGen.newCurvePoints();
         }
 
@@ -63,6 +71,7 @@ public class TreeRandom : MonoBehaviour
 
         treeObject = new GameObject("Tree", typeof(MeshFilter), typeof(MeshRenderer));
         treeObject.transform.localScale = new Vector3(1, 1, 1);
+        treeObject.transform.parent = this.transform;
         MeshFilter treeMeshFilt = treeObject.GetComponent<MeshFilter>();
         treeMeshFilt.mesh = Tree;
 

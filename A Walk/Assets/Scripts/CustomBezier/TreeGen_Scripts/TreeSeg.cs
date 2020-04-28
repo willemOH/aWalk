@@ -8,11 +8,12 @@ public struct TreeSeg //segment of tree made from one bezier curve
     {
 
         TreeRing[] segment = new TreeRing[subDivX];
-        float Xincrement = 1 / subDivX; // increments along Segment curve
+        float Xincrement = 1f / (float)subDivX; // increments along Segment curve
         for (int i = 0; i <= subDivX - 1; i++)
         {
             Vector3 curvePoint = bezPath.Curve(i * Xincrement);
-            Vector3 curvePerpendicularTangent = Quaternion.Euler(0, 0, 90) * bezPath.CurveTanNVec(); //find out what value this give me
+            Vector3 curvePerpendicularTangent = Quaternion.Euler(90, 0, 0) * bezPath.CurveTanNVec();
+            Debug.Log(curvePoint);//find out what value this give me
             segment[i] = new TreeRing(subDivY, curvePoint, curvePerpendicularTangent);
         }
 
@@ -31,7 +32,7 @@ public struct TreeSeg //segment of tree made from one bezier curve
     }
 
     public Vector3 P1 { get; }  //these are kept for later possible modification
-    public Vector3 P2 { get; }
+    public Vector3 P2 { get; } //replace with Bezier class
     public Vector3 P3 { get; }
     public Vector3 P4 { get; }
 

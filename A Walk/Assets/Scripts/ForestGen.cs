@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class ForestGen : MonoBehaviour
 {
-
-    
-    public Object testObj;
-    GameObject tree;
+    //public Object testObj;
+    //GameObject tree;
     public int Number_of_Segments = 3;
     public int Rings_X = 3; //# of Segment rings
     public int Rings_Y = 6; //# of vertices on Segment rings
     public int branchDensity = 1;
     public float branchVariance = 0;
-
+    
     public bool generate = false;
     public bool testGenerate = false;
+
     private void Start()
     {
         
@@ -24,8 +23,12 @@ public class ForestGen : MonoBehaviour
     {
         if (generate)
         {
-            GameObject newTree = Instantiate(tree, this.transform);
-            newTree.AddComponent<TreeRandom>();
+            GameObject newTree = new GameObject("TreeInst");
+            newTree.transform.parent = this.transform;
+            TreeRandom treeScript = newTree.AddComponent<TreeRandom>();
+            treeScript.segNum = Number_of_Segments;
+            treeScript.subdivX = Rings_X;
+            treeScript.subdivY = Rings_Y;
             generate = false;
         }
         if (testGenerate)

@@ -17,14 +17,15 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
+
             tree = treeTestObject.AddComponent<TreeRandom>();
-            tree.segNum = 4;
+            tree.segNum = 3;
             tree.subdivX = 4;
-            tree.subdivY = 4;
+            tree.subdivY = 3;
             seg = treeTestObject.GetComponent<TreeSeg>();
             ring = treeTestObject.GetComponent<TreeRing>();
         }
-        
+
         // A Test behaves as an ordinary method
         [Test]
         public void NewRing()
@@ -36,11 +37,10 @@ namespace Tests
             testBez.P3 = new Vector3(2, .2f, 0);
             testBez.P4 = new Vector3(2, 0, 0);
             */
-            Vector3 perpendicularVec = new Vector3(1, 0, 0);
-            TreeRing testRing = new TreeRing(tree.subdivY, new Vector3(0,1,0), perpendicularVec); //simulated point along curve
-                                                                               //point and point on 90 degrees axis to other point
-            float Yincrement = 360 / tree.subdivY;
-            Assert.AreEqual(testRing.verts[0], new Vector3(1, 1, 0));
+            Vector3 perpendicularVec = new Vector3(1, 0, 0); //simulated point along a curve
+            TreeRing testRing = new TreeRing(tree.subdivY, new Vector3(0,0,0), perpendicularVec); //curvepoint and point on 90 degrees axis to it
+            float Yincrement = 360 / tree.subdivY; //will be 120
+            Assert.AreEqual(testRing.verts[0], new Vector3(0, 1, 0));
             Assert.AreEqual(testRing.verts[1], (Quaternion.Euler(0, Yincrement * 1, 0) * perpendicularVec));
             Assert.AreEqual(testRing.verts[2], (Quaternion.Euler(0, Yincrement * 2, 0) * perpendicularVec));
             Assert.AreEqual(testRing.verts[3], (Quaternion.Euler(0, Yincrement * 3, 0) * perpendicularVec));
