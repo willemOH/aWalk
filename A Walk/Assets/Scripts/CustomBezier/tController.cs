@@ -27,12 +27,15 @@ public class tController : MonoBehaviour
 
     private float tTex;
     bool once = false;
+
+   
     public enum state
     {
         idle,
         flying,
         landing
     };
+    
 
     public state butterState;
 
@@ -66,7 +69,7 @@ public class tController : MonoBehaviour
         Debug.Log("test");
         if (butterState == state.flying)
         {
-            // speed smoothing operations
+            // speed smoothing operations -- might look into using smooth.Dampen
             t += Time.deltaTime * lerpTune;
             speed = Mathf.Lerp(previousSpeed, originalSpeed / pathGen.travelRange * speedToRangeRatio, Mathf.Clamp(t,0,1)); //copy of speed so calculations don't build on up eachother
             current_speed = Vector3.Magnitude(followPath.transform.position - lastLoc) * 100; //distance between position at last frame and position at this frame * 100 for 1 decimal range 

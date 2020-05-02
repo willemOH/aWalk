@@ -15,7 +15,6 @@ public class ButterflyAnim : MonoBehaviour
     void Update()
     {
         anim.SetInteger("State", (int)tCon.butterState); //sets "state" animator parameter with int of butterState enum
-        
     }
 
     

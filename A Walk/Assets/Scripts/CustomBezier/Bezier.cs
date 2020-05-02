@@ -29,19 +29,27 @@ public class Bezier
         Vector3 position3D = -(P3 - P4) * t + P3; //directionVec * t * point1
         return position3D;
     }
-
+    
     public Vector3 CurveTangentLine(float t) //derivative of cubic bezier curve function
     {
         Vector3 position3D = (Mathf.Pow(3*(1 - t), 2)) * P1 + 3 * 2*(1 - t) * t * P2 + 3 * (1 - t) * (2*t) * P3 + (Mathf.Pow(3*t, 2)) * P4;
         return position3D;
     }
 
+    public Vector3 CurveTangentVectorN(float t)
+    {
+        Vector3 firstPoint = this.Curve(t);
+        Vector3 secondPoint = this.Curve(t + .01f);
+        Vector3 tangentVector = secondPoint - firstPoint;
+        return tangentVector.normalized;
+    }
+    /*
     public Vector3 CurveTanNVec() //normal vector of tangent line
     {
         Vector3 point1 = CurveTangentLine(0);
         Vector3 point2 = CurveTangentLine(1);
         return point1 - point2; //add this vector to bez point and that should do it
     }
-
+    */
 
 }

@@ -8,10 +8,16 @@ public class ButterFlySpawner : MonoBehaviour
     public GameObject BezierGenPrefab;
     public RuntimeAnimatorController animator;
     public bool spawnButter = false;
+    public bool fly = false;
+    public bool land = false;
+    public bool idle = false;
+    public bool bezGUI = false;
     List<GameObject> butterList = new List<GameObject>();
 
+    private tController tcon;
     public float flyspeed = 1;
     public float wingspeed = 1;
+    private float selectedWingSpeed = 5;
     public float wingSpeedToDistanceMultiplier = 1.2f;
     public float currentSetSpeed;
     public float currentSpeed;
@@ -25,8 +31,8 @@ public class ButterFlySpawner : MonoBehaviour
         
         if(spawnButter == true)
         {
-            spawnButter = false;
             StartCoroutine("NewButter");
+            spawnButter = false;
         }
         if (butterList.Count >0)
         {
@@ -34,12 +40,28 @@ public class ButterFlySpawner : MonoBehaviour
             butterList[0].GetComponent<tController>().lerpTune = lerpTune;
             //butterList[0].GetComponentInChildren<Animator>().speed = wingspeed / butterList[0].GetComponent<tController>().current_speed * wingSpeedToDistanceMultiplier; //changing animator speed every frame is causing wing freeze - update every other frame etc?
             butterList[0].GetComponentInChildren<Animator>().speed = wingspeed *(1 - sloMo); //what previous line was when it worked
-
             currentSetSpeed = butterList[0].GetComponent<tController>().speed;
             currentSpeed = butterList[0].GetComponent<tController>().current_speed;
             wingSpeedLive = butterList[0].GetComponentInChildren<Animator>().speed;
 
 
+        }
+        if (fly == true)
+        {
+            idle = false;
+            wingspeed = selectedWingSpeed;
+            tcon.butterState = tController.state.flying;
+        }
+        if (land == true)
+        {
+            tcon.butterState = tController.state.landing;
+            fly = false;
+            if(idle == true)
+            {
+                wingspeed = 1;
+                tcon.butterState = tController.state.idle;
+                land = false;
+            }
         }
     }
 
@@ -48,14 +70,16 @@ public class ButterFlySpawner : MonoBehaviour
         GameObject butterInst = Instantiate(ButterModel);
         GameObject butterMesh = butterInst.transform.GetChild(0).gameObject; //getting child mesh and adding animator
         Animator butterAnim = butterMesh.AddComponent<Animator>();           //
-        butterAnim.runtimeAnimatorController = animator;                                               //
+        butterAnim.runtimeAnimatorController = animator;                     //
         GameObject bezierFabInst = Instantiate(BezierGenPrefab);
-        tController tcon = bezierFabInst.GetComponent<tController>();
+        tcon = bezierFabInst.GetComponent<tController>();
         tcon.followPath = butterInst;
         butterInst.transform.parent = bezierFabInst.transform;
         bezierFabInst.transform.parent = this.transform;
         butterList.Add(bezierFabInst); //question for justin - better to have butterfly in bezierfab or bezierfab in butterfly for adding to list?
-        tcon.butterState = tController.state.flying;
+        selectedWingSpeed = wingspeed;
+        wingspeed = 1;
+        tcon.butterState = tController.state.idle;
 
         yield return null;
 
@@ -66,4 +90,7 @@ public class ButterFlySpawner : MonoBehaviour
         //BezierPathGen pathgen = butterInst.GetComponent<BezierPathGen>();
         //pathgen.butterfly = true;
     }
+
+    
+
 }
