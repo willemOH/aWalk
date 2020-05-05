@@ -11,7 +11,7 @@ public struct TreeRing //info for one "ring" of a Segment
         for (int j = 0; j <= subdivY - 1; j++)
         {
             Vector3 ringVert = curvePnt + (Quaternion.Euler(0, Yincrement * j, 0) * curvePerpendicularTangent); //point along curve + perpendicular normal vector * rotation multiple 
-            //Debug.Log(ringVert);
+            Debug.Log(ringVert);
             ringVerts[j] = ringVert;
         }
         curvePoint = curvePnt;
