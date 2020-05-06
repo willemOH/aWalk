@@ -4,12 +4,18 @@ using UnityEngine;
 
 public struct TreeSeg //segment of tree made from one bezier curve
 {
+    /// <summary>
+    /// Treeseg params
+    /// </summary>
+    /// <param name="subDivX"> divisions of curve</param>
+    /// <param name="subDivY"> number of points on rings</param>
+    /// <param name="bezPath"></param>
     public TreeSeg(int subDivX, int subDivY, Bezier bezPath)
     {
 
         TreeRing[] segment = new TreeRing[subDivX];
         float Xincrement = 1f / (float)subDivX; // increments along Segment curve
-        for (int i = 0; i <= subDivX - 1; i++)
+        for (int i = 0; i < subDivX - 1; i++)
         {
             Vector3 curvePoint = bezPath.Curve(i * Xincrement);
             Vector3 curvePerpendicularTangent = Vector3.Cross(bezPath.CurveTangentVectorN(i * Xincrement), new Vector3(1, 0, 0));
@@ -18,11 +24,7 @@ public struct TreeSeg //segment of tree made from one bezier curve
             segment[i] = new TreeRing(subDivY, curvePoint, curvePerpendicularTangent);
         }
 
-        P1 = bezPath.P1;
-        P2 = bezPath.P2;
-        P3 = bezPath.P3;
-        P4 = bezPath.P4;
-
+        bezierPath = bezPath;
 
         ringVerts = segment;
 
@@ -31,11 +33,7 @@ public struct TreeSeg //segment of tree made from one bezier curve
         vertsInSeg = ringsNum * vertsNum;
 
     }
-
-    public Vector3 P1 { get; }  //these are kept for later possible modification
-    public Vector3 P2 { get; } //replace with Bezier class
-    public Vector3 P3 { get; }
-    public Vector3 P4 { get; }
+    public Bezier bezierPath { get; }
 
     public TreeRing[] ringVerts { get; } //subdimension contains a set of verts forming a ring
                                      //around point on Segment curve 

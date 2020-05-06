@@ -5,10 +5,10 @@ using UnityEngine;
 //given the four points, can perform a variety of curve function calculations
 public class Bezier
 {
-    public Vector3 P1; //startPoint
-    public Vector3 P2; //startPoint Handle
-    public Vector3 P3; //endPoint Handle
-    public Vector3 P4; //endPoint
+    public Vector3 P1 = new Vector3(0,0,0); //startPoint
+    public Vector3 P2 = new Vector3(.25f, .25f, 0);//startPoint Handle
+    public Vector3 P3 = new Vector3(-.25f, .75f, 0);//endPoint Handle
+    public Vector3 P4 = new Vector3(0,1,0); //endPoint
  
     public Vector3 Curve(float t)
     {

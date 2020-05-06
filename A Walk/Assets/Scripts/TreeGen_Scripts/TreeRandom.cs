@@ -118,11 +118,11 @@ public class TreeRandom : MonoBehaviour
     {
         Vector3[] verts = new Vector3[treeSegs.Count * treeSegs[0].vertsInSeg]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
         TreeSeg sGeneric = treeSegs[0]; //all TreeSegs should have same vertex count data - using count of data from first seg for all segs
-        for (int i = 0; i <= treeSegs.Count - 1; i++)
+        for (int i = 0; i < treeSegs.Count - 1; i++)
         {
-            for (int j = 0; j <= sGeneric.ringsNum - 1; j++)
+            for (int j = 0; j < sGeneric.ringsNum - 1; j++)
             {
-                for (int l = 0; l <= sGeneric.vertsNum - 1; l++)
+                for (int l = 0; l < sGeneric.vertsNum - 1; l++)
                 {
                     verts[i * sGeneric.vertsInSeg + j * sGeneric.ringsNum + l] = treeSegs[i].ringVerts[j].verts[l];
                 }
