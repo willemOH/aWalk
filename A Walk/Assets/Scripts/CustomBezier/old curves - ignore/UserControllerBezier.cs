@@ -64,7 +64,7 @@ public class UserControllerBezier : MonoBehaviour //POSSIBLY CREATE CONTROLLER S
             bezScrip.tObject = 0f;
             //t = 0;
             objectMove = false;
-            Debug.Log(bezScrip.tObject);
+           
         }
 
     }
@@ -79,7 +79,7 @@ public class UserControllerBezier : MonoBehaviour //POSSIBLY CREATE CONTROLLER S
         if (Physics.Raycast(ray, out hit))
         {
             endPoint.position = hit.point;
-            Debug.Log(hit.point);
+           
         }
 
         startPoint.position = bezScrip.followPath.transform.position;

@@ -147,7 +147,7 @@ public class BezierPathGen1 : MonoBehaviour
         if(Mathf.Round(tObject * 100) / 100 == .9)
         {
             previous = true;
-            Debug.Log("true");
+           
         }
         if(Mathf.Round(tObject*100)/100 >= 1) //rounding t value to 2 decimal places for comparison
         {

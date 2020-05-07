@@ -24,11 +24,15 @@ public class TreeRandom : MonoBehaviour
     public Mesh Tree;
     GameObject treeObject;
     public Vector3[] Verts; //verts arranged for mesh formation
+    
+    
 
    // [HideInInspector] to uncomment when testng is over
     public int segNum=0;
     public int subdivX=0; //# of TreeSeg rings
     public int subdivY=0;
+
+    //public bool meshGenerated = false;
 
 
     /* can't do constructor with components because of monobehavior and adding values seperate from void Start
@@ -42,11 +46,17 @@ public class TreeRandom : MonoBehaviour
     void Awake()
     {
         pthGen = this.GetComponent<BezierPathGen>();
+        
+       
     }
     private void Start()
     {
+        
         //need to ENABLE TREE IN BEZPATHGEN 
+
         StartCoroutine("generateTreeMesh");
+            
+      
         if (segNum == 0 || subdivX == 0 || subdivY == 0)
         {
             throw new ArgumentException("segNum subdivX or subdivY cannot be zero");
@@ -118,11 +128,11 @@ public class TreeRandom : MonoBehaviour
     {
         Vector3[] verts = new Vector3[treeSegs.Count * treeSegs[0].vertsInSeg]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
         TreeSeg sGeneric = treeSegs[0]; //all TreeSegs should have same vertex count data - using count of data from first seg for all segs
-        for (int i = 0; i < treeSegs.Count - 1; i++)
+        for (int i = 0; i <= treeSegs.Count - 1; i++)
         {
-            for (int j = 0; j < sGeneric.ringsNum - 1; j++)
+            for (int j = 0; j <= sGeneric.ringsNum - 1; j++)
             {
-                for (int l = 0; l < sGeneric.vertsNum - 1; l++)
+                for (int l = 0; l <= sGeneric.vertsNum - 1; l++)
                 {
                     verts[i * sGeneric.vertsInSeg + j * sGeneric.ringsNum + l] = treeSegs[i].ringVerts[j].verts[l];
                 }
@@ -134,7 +144,7 @@ public class TreeRandom : MonoBehaviour
 
     public void addTreeSeg(Bezier path)
     {
-        TreeSeg seg = new TreeSeg(subdivX, subdivX, path);
+        TreeSeg seg = new TreeSeg(subdivX, subdivY, path);
         treeSegs.Add(seg);
     }
 

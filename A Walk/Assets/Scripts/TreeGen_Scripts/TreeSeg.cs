@@ -15,12 +15,12 @@ public struct TreeSeg //segment of tree made from one bezier curve
 
         TreeRing[] segment = new TreeRing[subDivX];
         float Xincrement = 1f / (float)subDivX; // increments along Segment curve
-        for (int i = 0; i < subDivX - 1; i++)
+        for (int i = 0; i <= subDivX - 1; i++)
         {
             Vector3 curvePoint = bezPath.Curve(i * Xincrement);
             Vector3 curvePerpendicularTangent = Vector3.Cross(bezPath.CurveTangentVectorN(i * Xincrement), new Vector3(1, 0, 0));
             //Vector3 curvePerpendicularTangent = Quaternion.Euler(90, 0, 0) * bezPath.CurveTanNVec();
-            Debug.Log(curvePoint);//find out what value this give me
+            //Debug.Log(curvePoint);//find out what value this give me
             segment[i] = new TreeRing(subDivY, curvePoint, curvePerpendicularTangent);
         }
 

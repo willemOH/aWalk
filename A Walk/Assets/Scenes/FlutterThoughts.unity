@@ -345,6 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 766268833}
   - component: {fileID: 766268831}
+  - component: {fileID: 766268832}
   m_Layer: 0
   m_Name: Forest
   m_TagString: Untagged
@@ -364,13 +365,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe7d7dca4e12d049962179a1c4c649f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Number_of_Segments: 3
-  Rings_X: 3
+  Number_of_Segments: 2
+  Rings_X: 2
   Rings_Y: 6
   branchDensity: 0
   branchVariance: 0
   generate: 0
   testGenerate: 0
+--- !u!114 &766268832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766268830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0ddae94b9f7604bbee750cbe6ec40c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptObject: {fileID: 4511743249639214401, guid: d79a73b13d709f1468a13e2700e7ff1f,
+    type: 3}
+  scriptType: TreeMeshVisualizer
+  objectName: TreeInst
+  findAndAssign: 0
 --- !u!4 &766268833
 Transform:
   m_ObjectHideFlags: 0

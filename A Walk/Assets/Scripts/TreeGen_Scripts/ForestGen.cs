@@ -11,7 +11,6 @@ public class ForestGen : MonoBehaviour
     public int Rings_Y = 6; //# of vertices on Segment rings
     public int branchDensity = 1;
     public float branchVariance = 0;
-    
     public bool generate = false;
     public bool testGenerate = false;
 
@@ -26,6 +25,7 @@ public class ForestGen : MonoBehaviour
             GameObject newTree = new GameObject("TreeInst");
             newTree.transform.parent = this.transform;
             TreeRandom treeScript = newTree.AddComponent<TreeRandom>();
+          
             treeScript.segNum = Number_of_Segments;
             treeScript.subdivX = Rings_X;
             treeScript.subdivY = Rings_Y;

@@ -25,6 +25,10 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
     public float y_handleRotMax;
     public float z_handleRotMax;
 
+    public Vector3 currentEnd;
+    public Vector3 currentBegin;
+
+
     [Header("Start Location Options (enable only one)")]
     public bool tree = true;
     public bool butterfly = false;
@@ -37,8 +41,8 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
         pth.P1 = startLoc;
         if (tree)
         {
-            pth.P4 = pth.P1 + new Vector3(travelRange, 0, 0);
-            pth.P2 = pth.P1 + new Vector3(0, 1, 0); //up
+            pth.P4 = pth.P1 + new Vector3(0, 0, 0);
+            pth.P2 = pth.P1 + new Vector3(0, 4, 0); //up
         }
         else if (butterfly)
         {
@@ -51,8 +55,15 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
                                          Random.Range(-z_handleRotMax, z_handleRotMax)) * (pth.P4 - pth.P1 * handleStrength);
         //Start Location options selected from within editor
 
+       
+
     }
 
+    private void Update()
+    {
+        currentBegin = pth.P1;
+        currentBegin = pth.P4;
+    }
     public void newCurvePoints() //generates new collection of points for a curve to be generated from -> P1, P2, P3, P4
     {
         travelRange = originalTravelRange * Random.Range(travelRangeMin, travelRangeMax);

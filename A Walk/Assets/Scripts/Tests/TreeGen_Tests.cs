@@ -11,7 +11,7 @@ namespace Tests
     public class TreeGen_Tests
     {
         GameObject treeTestObject = new GameObject();
-        TreeRandom tree;
+  
         TreeSeg seg;
         TreeRing ring;
         float epsilon;
@@ -19,11 +19,6 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-
-            tree = treeTestObject.AddComponent<TreeRandom>();
-            tree.segNum = 3;
-            tree.subdivX = 4;
-            tree.subdivY = 3;
             epsilon = .1f;
         
         }
@@ -81,10 +76,35 @@ namespace Tests
             Assert.AreEqual(seg.ringVerts[1].curvePoint.x, bez.Curve(Xincrement).x);
             Assert.AreEqual(seg.ringVerts[1].curvePoint.y, bez.Curve(Xincrement).y);
             Assert.AreEqual(seg.ringVerts[1].curvePoint.z, bez.Curve(Xincrement).z);
-
-
-
-
         }
+        [Test]
+        
+        public void TreeTest()
+        {
+            GameObject treeObj = new GameObject("tree");
+            TreeRandom tree = treeObj.AddComponent<TreeRandom>();
+            tree.segNum = 3;
+            tree.subdivY = 6;
+            tree.subdivX = 3;
+            tree.StartCoroutine("generateTreeMesh");
+            Assert.AreEqual(tree.subdivY*tree.subdivX*tree.segNum, tree.Verts.Length);
+            //Assert.AreEqual((((tree.subdivX + 1)*tree.segNum)+1)*tree.subdivY, tree.Verts.Length);
+        }
+
+        [Test]
+
+        public void TreeMeshTest()
+        {
+            GameObject treeObj = new GameObject("tree");
+            TreeRandom tree = treeObj.AddComponent<TreeRandom>();
+            tree.segNum = 1;
+            tree.subdivY = 3;
+            tree.subdivX = 1;
+            tree.StartCoroutine("generateTreeMesh");
+            Assert.AreEqual(tree.subdivY * tree.subdivX * tree.segNum, tree.Verts.Length);
+            //Assert.AreEqual((((tree.subdivX + 1)*tree.segNum)+1)*tree.subdivY, tree.Verts.Length);
+        }
+
+
     }
 }

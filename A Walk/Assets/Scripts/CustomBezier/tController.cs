@@ -66,7 +66,7 @@ public class tController : MonoBehaviour
             bezUpdate();
             once = true;
         }
-        Debug.Log("test");
+       
         if (butterState == state.flying)
         {
             // speed smoothing operations -- might look into using smooth.Dampen
