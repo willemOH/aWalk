@@ -365,9 +365,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe7d7dca4e12d049962179a1c4c649f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Number_of_Segments: 2
+  Number_of_Segments: 1
   Rings_X: 2
-  Rings_Y: 6
+  Rings_Y: 5
   branchDensity: 0
   branchVariance: 0
   generate: 0

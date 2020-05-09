@@ -91,25 +91,36 @@ public class TreeRandom : MonoBehaviour
     public int[] Triangles()
     {
         int ringVerts = subdivY;
-        int[] tris = new int[Verts.Length * 6 - subdivY * 6];
+        int[] tris = new int[Verts.Length * 6 - subdivY * 6]; //each vert * # of verts to make a plane - verts in last ring (to close off the top of the tree)
         int j = 0;
-        for (int i = 0; i <= Verts.Length - subdivY - 2; i++) //populate tri array with proper index location of verts for triangle from vert construction path
+        for (int i = 0; i <= Verts.Length - subdivY - 1; i++) //populate tri array with proper index location of verts for triangle from vert construction path
         {
-            tris[j] = i;
-            tris[j + 1] = ringVerts + i;
-            tris[j + 2] = ringVerts + 1 + i;
-            tris[j + 3] = ringVerts + 1 + i; //same on purpose
-            tris[j + 4] = i;
-            tris[j + 5] = i + 1;
-
-            j += subdivY;
+            if (j % (6*(subdivY-1)) == 0 && j != 0) //if reached last plane to close ring, different triangle assignment to hook first verts in ring to last
+            {
+                tris[j] = i; //is 5
+                tris[j + 1] = (ringVerts + 1 + i) - subdivY; //needs = 6 //is currently 12 //subtract subdivY
+                tris[j + 2] = ringVerts + i; 
+                tris[j + 3] = (ringVerts + 1 + i) - subdivY; 
+                tris[j + 4] = i;
+                tris[j + 5] = (i + 1)-subdivY; //needs to be 0 //is curretly 6 //subtract subdivY
+            }
+            else
+            {
+                tris[j] = i;
+                tris[j + 1] = ringVerts + 1 + i;
+                tris[j + 2] = ringVerts + i;
+                tris[j + 3] = ringVerts + 1 + i; //same on purpose
+                tris[j + 4] = i;
+                tris[j + 5] = i + 1;
+            }
+            j += 6;
         }
         return tris;
     }
 
     public Vector2[] Uvs()
     {
-        Vector2[] uvs = new Vector2[Verts.Length];
+        /*Vector2[] uvs = new Vector2[Verts.Length];
         int r = 0; //verts in row - corresponds to % U coordinate
         int s = 0; //# of segs - corresponds to % of V coordinate
         for (int i = 0; i < Verts.Length - 1; i++)
@@ -123,6 +134,17 @@ public class TreeRandom : MonoBehaviour
             r++;
         }
         return uvs;
+        */
+        Vector2[] uvs = new Vector2[Verts.Length];
+        int i = 0;
+        while (i < uvs.Length)
+        {
+            //float width = 
+            uvs[i] = new Vector2(Verts[i].y, Verts[i].x); //divide these x and y values by width and height of the plane
+            i++;
+        }
+        return uvs;
+
     }
     public Vector3[] meshVerts() //retrieve list of all verts in every TreeSeg for entire tree mesh creation
     {
@@ -132,9 +154,9 @@ public class TreeRandom : MonoBehaviour
         {
             for (int j = 0; j <= sGeneric.ringsNum - 1; j++)
             {
-                for (int l = 0; l <= sGeneric.vertsNum - 1; l++)
+                for (int l = 0; l <= sGeneric.vertsInRing - 1; l++)
                 {
-                    verts[i * sGeneric.vertsInSeg + j * sGeneric.ringsNum + l] = treeSegs[i].ringVerts[j].verts[l];
+                    verts[i * sGeneric.vertsInSeg + j * sGeneric.vertsInRing + l] = treeSegs[i].ringVerts[j].verts[l];
                 }
             }
         }

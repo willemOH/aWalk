@@ -19,19 +19,19 @@ public class TreeMeshVisualizer : MonoBehaviour
     void Start()
     {
         vertMarker = this.transform.Find("vertMarker(Clone)").gameObject;
-        Invoke("LateStart",2f);
+        Invoke("LateStart",1f);
        
     }
 
     void LateStart()
     {
-        int i = 1;
-        foreach (Vector3 vert in treeMesh.Verts)
+        //int i = 1;
+        for(int i=0; i <= treeMesh.Verts.Length - 1; i++ )
         {
-            GameObject marker = Instantiate(vertMarker, vert, Quaternion.identity);
+            GameObject marker = Instantiate(vertMarker, treeMesh.Verts[i], Quaternion.identity);
             marker.name = $"VM {i}";
             marker.transform.localScale = scale;
-            i++;
+      
         }
     }
 

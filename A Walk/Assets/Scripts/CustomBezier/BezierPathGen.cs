@@ -41,8 +41,8 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
         pth.P1 = startLoc;
         if (tree)
         {
-            pth.P4 = pth.P1 + new Vector3(0, 0, 0);
-            pth.P2 = pth.P1 + new Vector3(0, 4, 0); //up
+            pth.P4 = pth.P1 + new Vector3(0, 1, 0); //up
+            pth.P2 = pth.P1 + new Vector3(0, .25f, 0); 
         }
         else if (butterfly)
         {
@@ -62,7 +62,7 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
     private void Update()
     {
         currentBegin = pth.P1;
-        currentBegin = pth.P4;
+        currentEnd = pth.P4;
     }
     public void newCurvePoints() //generates new collection of points for a curve to be generated from -> P1, P2, P3, P4
     {

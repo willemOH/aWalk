@@ -29,8 +29,8 @@ public struct TreeSeg //segment of tree made from one bezier curve
         ringVerts = segment;
 
         ringsNum = ringVerts.Length;
-        vertsNum = ringVerts[0].verts.Length;
-        vertsInSeg = ringsNum * vertsNum;
+        vertsInRing = ringVerts[0].verts.Length;
+        vertsInSeg = ringsNum * vertsInRing;
 
     }
     public Bezier bezierPath { get; }
@@ -40,7 +40,7 @@ public struct TreeSeg //segment of tree made from one bezier curve
                                      //float[] tDistributions; //t_values where the rings will be put along the curve(t)
 
     public int ringsNum { get; }
-    public int vertsNum { get; }
+    public int vertsInRing { get; }
     public int vertsInSeg { get; }
 }
 
