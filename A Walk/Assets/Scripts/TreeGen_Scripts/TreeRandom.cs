@@ -95,7 +95,7 @@ public class TreeRandom : MonoBehaviour
         int j = 0;
         for (int i = 0; i <= Verts.Length - subdivY - 1; i++) //populate tri array with proper index location of verts for triangle from vert construction path
         {
-            if (j % (6*(subdivY-1)) == 0 && j != 0) //if reached last plane to close ring, different triangle assignment to hook first verts in ring to last
+            if ((j + 6) % (6*(subdivY)) == 0 && j != 0) //if reached last plane to close ring, different triangle assignment to hook first verts in ring to last
             {
                 tris[j] = i; //is 5
                 tris[j + 1] = (ringVerts + 1 + i) - subdivY; //needs = 6 //is currently 12 //subtract subdivY
@@ -103,11 +103,13 @@ public class TreeRandom : MonoBehaviour
                 tris[j + 3] = (ringVerts + 1 + i) - subdivY; 
                 tris[j + 4] = i;
                 tris[j + 5] = (i + 1)-subdivY; //needs to be 0 //is curretly 6 //subtract subdivY
-            }
+                //j -= 6; //taking away a plane (6 verts) increment every time a ring is linked back to its first plane
+                //i -= subdivY; //so that tri index assignment starts where this assignment ended
+            } 
             else
             {
                 tris[j] = i;
-                tris[j + 1] = ringVerts + 1 + i;
+                tris[j + 1] = ringVerts + 1 + i; //should be 12 is 13
                 tris[j + 2] = ringVerts + i;
                 tris[j + 3] = ringVerts + 1 + i; //same on purpose
                 tris[j + 4] = i;
@@ -147,16 +149,20 @@ public class TreeRandom : MonoBehaviour
 
     }
     public Vector3[] meshVerts() //retrieve list of all verts in every TreeSeg for entire tree mesh creation
-    {
-        Vector3[] verts = new Vector3[treeSegs.Count * treeSegs[0].vertsInSeg]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
+    { //new approach -- establish ground ring then loop through by seg num for subsequent
+        Vector3[] verts = new Vector3[(treeSegs.Count + 1) * subdivY]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
         TreeSeg sGeneric = treeSegs[0]; //all TreeSegs should have same vertex count data - using count of data from first seg for all segs
-        for (int i = 0; i <= treeSegs.Count - 1; i++)
+        for (int l = 0; l <= sGeneric.vertsInRing - 1; l++) //populate from initial ground ring
+        {
+            verts[l] = treeSegs[0].ringVerts[0].verts[l]; //apply messy fix here
+        }
+        for (int i = 1; i <= treeSegs.Count - 1; i++) //populate from subsequent rings
         {
             for (int j = 0; j <= sGeneric.ringsNum - 1; j++)
             {
                 for (int l = 0; l <= sGeneric.vertsInRing - 1; l++)
                 {
-                    verts[i * sGeneric.vertsInSeg + j * sGeneric.vertsInRing + l] = treeSegs[i].ringVerts[j].verts[l];
+                    verts[i * (sGeneric.vertsInSeg - sGeneric.vertsInRing) + j * sGeneric.vertsInRing + l] = treeSegs[i].ringVerts[j].verts[l];
                 }
             }
         }
