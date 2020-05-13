@@ -36,12 +36,12 @@ public class ButterFlySpawner : MonoBehaviour
         }
         if (butterList.Count >0)
         {
-            butterList[0].GetComponent<tController>().globalSpeed = flyspeed * (1 - sloMo);
-            butterList[0].GetComponent<tController>().lerpTune = lerpTune;
+            butterList[0].GetComponentInChildren<tController>().globalSpeed = flyspeed * (1 - sloMo);
+            butterList[0].GetComponentInChildren<tController>().lerpTune = lerpTune;
             //butterList[0].GetComponentInChildren<Animator>().speed = wingspeed / butterList[0].GetComponent<tController>().current_speed * wingSpeedToDistanceMultiplier; //changing animator speed every frame is causing wing freeze - update every other frame etc?
             butterList[0].GetComponentInChildren<Animator>().speed = wingspeed *(1 - sloMo); //what previous line was when it worked
-            currentSetSpeed = butterList[0].GetComponent<tController>().speed;
-            currentSpeed = butterList[0].GetComponent<tController>().current_speed;
+            currentSetSpeed = butterList[0].GetComponentInChildren<tController>().speed;
+            currentSpeed = butterList[0].GetComponentInChildren<tController>().current_speed;
             wingSpeedLive = butterList[0].GetComponentInChildren<Animator>().speed;
 
 
@@ -74,9 +74,11 @@ public class ButterFlySpawner : MonoBehaviour
         GameObject bezierFabInst = Instantiate(BezierGenPrefab);
         tcon = bezierFabInst.GetComponent<tController>();
         tcon.followPath = butterInst;
-        butterInst.transform.parent = bezierFabInst.transform;
-        bezierFabInst.transform.parent = this.transform;
-        butterList.Add(bezierFabInst); //question for justin - better to have butterfly in bezierfab or bezierfab in butterfly for adding to list?
+        bezierFabInst.transform.parent = butterInst.transform;
+        butterInst.transform.parent = this.transform;
+        //butterInst.transform.parent = bezierFabInst.transform;
+        //bezierFabInst.transform.parent = this.transform;
+        butterList.Add(butterInst); //question for justin - better to have butterfly in bezierfab or bezierfab in butterfly for adding to list?
         selectedWingSpeed = wingspeed;
         wingspeed = 1;
         tcon.butterState = tController.state.idle;

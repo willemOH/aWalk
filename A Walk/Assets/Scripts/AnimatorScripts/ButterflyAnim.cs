@@ -9,8 +9,8 @@ public class ButterflyAnim : MonoBehaviour
     
     void Start()
     {
-        anim = this.GetComponentInChildren<Animator>();
-        tCon = this.GetComponent<tController>();
+        anim = this.transform.parent.GetComponentInChildren<Animator>();
+        tCon = this.transform.parent.GetComponentInChildren<tController>();
     }
     void Update()
     {
