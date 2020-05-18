@@ -1,13 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.WSA.Input;
 
 public class ButterFlySpawner : MonoBehaviour
 {
     public GameObject ButterModel;
     public GameObject BezierGenPrefab;
-    public RuntimeAnimatorController animator;
+    public GameObject Hand;
+
+    private GameObject butterInst;
+    private GameObject bezierFabInst; //add control to flying to this script // think about what controls when the butterfly
+    //gets close to hand and slows down
+    //public RuntimeAnimatorController animator;
     public bool spawnButter = false;
+    public bool release = false;
     List<GameObject> butterList = new List<GameObject>();
 
     
@@ -29,26 +36,35 @@ public class ButterFlySpawner : MonoBehaviour
            
 
         }
-       
+        if (release != true)
+        {
+            butterInst.transform.position = Hand.transform.position;
+        }
+        bezierFabInst.GetComponent<BezierPathGen>().startLoc = Hand.transform.position;
     }
 
     IEnumerator NewButter()
     {
-        GameObject butterInst = Instantiate(ButterModel);
-        ButterBrain brain = butterInst.AddComponent<ButterBrain>();
-        GameObject butterMesh = butterInst.transform.GetChild(0).gameObject; //getting child mesh and adding animator
-        Animator butterAnim = butterMesh.AddComponent<Animator>();           //
-        butterAnim.runtimeAnimatorController = animator;                     //
-        GameObject bezierFabInst = Instantiate(BezierGenPrefab);
-        brain.tcon = bezierFabInst.GetComponent<tController>();
-        brain.tcon.followPath = butterInst;
-        bezierFabInst.transform.parent = butterInst.transform;
+        butterInst = Instantiate(ButterModel,Hand.transform); //Model Instantiation
         butterInst.transform.parent = this.transform;
-        butterList.Add(butterInst);
+
+        bezierFabInst = Instantiate(BezierGenPrefab); //Bezier controller instantiation
+        bezierFabInst.transform.parent = butterInst.transform;
+
+        ButterBrain brain = butterInst.GetComponent<ButterBrain>(); //get behavior controller
+        brain.tcon = bezierFabInst.GetComponent<tController>(); //getting butterfly behavior controller and assigning parameters
+        brain.tcon.followPath = butterInst;
         brain.wingSpeed = wingspeed;
         brain.flyspeed = flyspeed;
         brain.tcon.butterState = tController.state.idle;
-
+        brain.butterBodMat = butterInst.transform.Find("butterV8/body").gameObject.GetComponent<SkinnedMeshRenderer>().material;
+        brain.eyeMesh = butterInst.transform.Find("butterV8/body/eyes").gameObject.GetComponent<SkinnedMeshRenderer>(); //target new material from eyereplace script 
+        brain.eyesOpaque = butterInst.transform.Find("butterV8/body/eyes").gameObject.GetComponent<SkinnedMeshRenderer>().material;
+        brain.butterWingL = butterInst.transform.Find("butterV8/wings/Bone.L/wingL").gameObject.GetComponent<SkinnedMeshRenderer>().material;
+        brain.butterWingR = butterInst.transform.Find("butterV8/wings/Bone.R/wingR").gameObject.GetComponent<SkinnedMeshRenderer>().material;
+        //could maybe move some of these things to start() of butterbrain
+        butterList.Add(butterInst);
+       
         yield return null;
 
         //more programatic approach

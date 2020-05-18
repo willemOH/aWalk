@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ButterBody
-  m_Shader: {fileID: -6465566751694194690, guid: 186914a0d1cbe7941b54370a2868d238,
+  m_Name: ButterEyes
+  m_Shader: {fileID: -6465566751694194690, guid: f6ba36739bc5550489620605fde72892,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Body_Col: 0
+    - Body_Col: 37.379646
     - Vector1_15ACCE8D: 0
     - _AlphaClip: 0
     - _Blend: 0
