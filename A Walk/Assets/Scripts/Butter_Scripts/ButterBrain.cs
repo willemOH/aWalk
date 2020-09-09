@@ -39,6 +39,12 @@ public class ButterBrain : MonoBehaviour
     public float timeToFade = 2f;
     public float test_t = 0;
     public float colorValRand;
+
+    private float t = 0;
+    public float factor = .7f;
+    public bool sloItDown = false;
+    public bool speedItUp = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,7 +81,26 @@ public class ButterBrain : MonoBehaviour
             anim.speed = current_wingspeed * (1 - sloMo); //what previous line was when it worked
             currentSetSpeed = GetComponentInChildren<tController>().speed;
             currentSpeed = GetComponentInChildren<tController>().current_speed;
-            
+            if(sloItDown == true)
+            {
+                 t += Time.deltaTime * factor;
+                sloMo = Mathf.Lerp(0f, .9f, t);
+                if(sloMo >= .9f)
+                {
+                    sloItDown = false;
+                    t -= t;
+                }
+            }
+            if(speedItUp == true)
+            {
+                t += Time.deltaTime * factor;
+                sloMo = Mathf.Lerp(.9f, 0f, t);
+                if (sloMo == 0f)
+                {
+                    speedItUp = false;
+                    t -= t;
+                }
+            }
         }
         if (idle == true)
         {

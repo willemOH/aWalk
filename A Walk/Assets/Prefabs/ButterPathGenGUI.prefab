@@ -694,7 +694,7 @@ GameObject:
   - component: {fileID: 8151788319970115526}
   - component: {fileID: 5187505056039489107}
   m_Layer: 0
-  m_Name: ButterPathGen (1)
+  m_Name: ButterPathGenGUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -740,6 +740,7 @@ MonoBehaviour:
   speedToRangeRatio: 1.2
   lerpTune: 0.5
   globalSpeed: 1
+  initialize: 0
   current_speed: 0
   tObject: 0
   followPath: {fileID: 0}
@@ -770,9 +771,12 @@ MonoBehaviour:
   x_handleRotMax: 180
   y_handleRotMax: 30
   z_handleRotMax: 30
+  currentEnd: {x: 0, y: 0, z: 0}
+  currentBegin: {x: 0, y: 0, z: 0}
   tree: 0
   butterfly: 1
   test: 0
+  initialize: 0
 --- !u!114 &8151788319970115527
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -49,7 +49,7 @@ MonoBehaviour:
   land: 0
   idle: 0
   bezGUI: 0
-  eyeNontransparent: {fileID: 2100000, guid: c75911193d1686d458c8bbad85883e6a, type: 2}
+  eyesOpaque: {fileID: 0}
   butterWingR: {fileID: 0}
   butterWingL: {fileID: 0}
   butterBodMat: {fileID: 0}
@@ -66,6 +66,7 @@ MonoBehaviour:
   sloMo: 0
   transitionTime: 0
   timeToFade: 2
+  test_t: 0
   colorValRand: 0
 --- !u!114 &4529952447175273089
 MonoBehaviour:
@@ -80,7 +81,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  ButterAppeared: 0
 --- !u!95 &946288893966868863
 Animator:
   serializedVersion: 3

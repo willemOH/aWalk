@@ -148,6 +148,7 @@ public class TreeRandom : MonoBehaviour
         return uvs;
 
     }
+    /*
     public Vector3[] meshVerts() //retrieve list of all verts in every TreeSeg for entire tree mesh creation
     { //new approach -- establish ground ring then loop through by seg num for subsequent
         Vector3[] verts = new Vector3[(treeSegs.Count + 1) * subdivY]; //TreeSegs * verts in TreeSegs = total # verts in TreeSeg
@@ -169,6 +170,26 @@ public class TreeRandom : MonoBehaviour
 
         return verts;
     }
+    */// key here was knowing an list can be pushed to an array and then can use simplifying list functions
+
+    public Vector3[] meshVerts()
+    {
+        List<Vector3> allVerts = new List<Vector3>();
+        foreach(TreeSeg segment in treeSegs)
+        {
+            foreach(TreeRing ring in segment.ringVerts)
+            {
+                foreach (Vector3 vert in ring.verts)
+                {
+                    allVerts.Add(vert);
+                }
+            }
+        }
+        return allVerts.ToArray();
+    }
+
+        
+
 
     public void addTreeSeg(Bezier path)
     {

@@ -8,6 +8,7 @@ public class tController : MonoBehaviour
 {
     public BezierPathGen pathGen;
     public Bezier bez;
+    public Collider boundsBox;
 
     public float speed = 1;
     public float speedToRangeRatio = 1.2f; //how fast long ranges are vs how slow short ranges are
@@ -17,6 +18,7 @@ public class tController : MonoBehaviour
     public float globalSpeed = 1;
     float t;
 
+    public bool initialize = false; 
     public float current_speed; //live-fed speed
     private Vector3 lastLoc; //for magnitude calculations
     [Range(0f, 1f)]
@@ -61,48 +63,64 @@ public class tController : MonoBehaviour
         
     void Update()
     {
-        if(once != true)
-        {
-            bezUpdate();
-            once = true;
-        }
-       
-        if (butterState == state.flying)
-        {
-            // speed smoothing operations -- might look into using smooth.Dampen
-            t += Time.deltaTime * lerpTune;
-            speed = Mathf.Lerp(previousSpeed, originalSpeed / pathGen.travelRange * speedToRangeRatio, Mathf.Clamp(t,0,1)); //copy of speed so calculations don't build on up eachother
-            current_speed = Vector3.Magnitude(followPath.transform.position - lastLoc) * 100; //distance between position at last frame and position at this frame * 100 for 1 decimal range 
-            lastLoc = followPath.transform.position;                                    //setting previous position for next frame as current position
-            tObject += Time.deltaTime * speed / 10 * globalSpeed; // division for precision
-            if (Mathf.Round(tObject * 100) / 100 >= 1) //rounding t value to 2 decimal places 
+        if (initialize == true) //messy solution to only start tController when initialize is set to true
+        {    //by external script. Better if it could be more self-sufficient
+            if (once != true)
             {
-                pathGen.newCurvePoints();
                 bezUpdate();
-                tObject -= tObject;
-                t = 0.0f; 
-                previousSpeed = speed;
+                once = true;
             }
 
-            if (followPath != null)
+            if (butterState == state.flying)
             {
-                if (curveTangent == true)
+
+                // speed smoothing operations -- might look into using smooth.Dampen
+                t += Time.deltaTime * lerpTune;
+                speed = Mathf.Lerp(previousSpeed, originalSpeed / pathGen.travelRange * speedToRangeRatio, Mathf.Clamp(t, 0, 1)); //copy of speed so calculations don't build on up eachother
+                current_speed = Vector3.Magnitude(followPath.transform.position - lastLoc) * 100; //distance between position at last frame and position at this frame * 100 for 1 decimal range 
+                lastLoc = followPath.transform.position;                                    //setting previous position for next frame as current position
+                tObject += Time.deltaTime * speed / 10 * globalSpeed; // division for precision
+                if (Mathf.Round(tObject * 100) / 100 >= 1) //rounding t value to 2 decimal places 
                 {
-                    followPath.transform.position = bez.CurveTangentLine(tObject);
+                    pathGen.newCurvePoints();
+                    int i = 0;
+                    while (boundsBox.bounds.Contains(pathGen.pth.P4) == false) //this could use some behavior that diverts butter path in opposite direction than just tried
+                    {
+                        i++;
+                        pathGen.newCurvePoints();
+                        if(i>10)
+                        {
+                            Debug.LogError("tried too many times to path butter");
+                            break;
+                        }
+                    }
+                    bezUpdate();
+                    tObject -= tObject;
+                    t = 0.0f;
+                    previousSpeed = speed;
                 }
-                else if (curveTangentPerpendicular == true)
+
+                if (followPath != null)
                 {
-                    followPath.transform.position = Quaternion.Euler(0, 0, 90) * bez.CurveTangentLine(tObject);
-                }
-                else
-                {
-                    tVecPrevious = followPath.transform.position;//storing previous position vector
-                    followPath.transform.position = bez.Curve(tObject);//assigning new position vector based on curve function
-                    followPath.transform.LookAt(followPath.transform.position + (followPath.transform.position - tVecPrevious));//subtracting one from the other and adding to current to find facing vector and assigning lookAt vector
+                    if (curveTangent == true)
+                    {
+                        followPath.transform.position = bez.CurveTangentLine(tObject);
+                    }
+                    else if (curveTangentPerpendicular == true)
+                    {
+                        followPath.transform.position = Quaternion.Euler(0, 0, 90) * bez.CurveTangentLine(tObject); //follow line perpendicular to curve tangent line
+                    }
+                    else
+                    {
+                        tVecPrevious = followPath.transform.position;//storing previous position vector
+                        followPath.transform.position = bez.Curve(tObject);//assigning new position vector based on curve function
+                        followPath.transform.LookAt(followPath.transform.position + (followPath.transform.position - tVecPrevious));//subtracting one from the other and adding to current to find facing vector/direction and assigning lookAt vector
+                    }
                 }
             }
         }
-
         
     }
+
+  
 }

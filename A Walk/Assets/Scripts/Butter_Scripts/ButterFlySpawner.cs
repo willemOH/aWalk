@@ -8,13 +8,17 @@ public class ButterFlySpawner : MonoBehaviour
     public GameObject ButterModel;
     public GameObject BezierGenPrefab;
     public GameObject Hand;
-
-    private GameObject butterInst;
+    public GameObject FlyBox;
+    private Vector3 handPosOnSpawn;
+    private GameObject butterInst = null;
+    private ButterBrain brain;
     private GameObject bezierFabInst; //add control to flying to this script // think about what controls when the butterfly
+    
     //gets close to hand and slows down
     //public RuntimeAnimatorController animator;
     public bool spawnButter = false;
     public bool release = false;
+    private bool released = false; //stays true once release is true (until another butterfly is spawned)
     List<GameObject> butterList = new List<GameObject>();
 
     
@@ -31,28 +35,56 @@ public class ButterFlySpawner : MonoBehaviour
             StartCoroutine("NewButter");
             spawnButter = false;
         }
-        if (butterList.Count >0)
+        if (butterList.Count > 0)
         {
            
 
         }
-        if (release != true)
+        if (butterInst != null)
         {
-            butterInst.transform.position = Hand.transform.position;
+            bezierFabInst.GetComponent<BezierPathGen>().startLoc = Hand.transform.position;
+            if (released != true) //problem where butterfly doestn rotate in flight
+            {
+               butterInst.transform.position = Hand.transform.position;
+                if (Mathf.Abs(handPosOnSpawn.x - Hand.transform.position.x) > .5f ||
+               Mathf.Abs(handPosOnSpawn.y - Hand.transform.position.y) > .5f ||
+               Mathf.Abs(handPosOnSpawn.z - Hand.transform.position.z) > .5f)
+                {
+                    release = true;
+                   
+                }
+            }
+           
+            if (release == true)
+            {
+                brain.tcon.pathGen.startLoc = Hand.transform.position;
+                brain.tcon.pathGen.StartCoroutine("initialize_pathGen");
+                brain.tcon.initialize = true;
+                //BezierGenPrefab.GetComponent<BezPathGUI>().enabled = true;
+                brain.fly = true;
+                release = false;
+                released = true;
+            }
         }
-        bezierFabInst.GetComponent<BezierPathGen>().startLoc = Hand.transform.position;
+       
+
+
     }
 
     IEnumerator NewButter()
     {
+        released = false;
+        handPosOnSpawn = new Vector3(Hand.transform.position.x, Hand.transform.position.y, Hand.transform.position.z);
         butterInst = Instantiate(ButterModel,Hand.transform); //Model Instantiation
+        butterInst.transform.localScale = Random.Range(.6f, 1.25f) * butterInst.transform.localScale;
         butterInst.transform.parent = this.transform;
 
         bezierFabInst = Instantiate(BezierGenPrefab); //Bezier controller instantiation
         bezierFabInst.transform.parent = butterInst.transform;
 
-        ButterBrain brain = butterInst.GetComponent<ButterBrain>(); //get behavior controller
+        brain = butterInst.GetComponent<ButterBrain>(); //get behavior controller
         brain.tcon = bezierFabInst.GetComponent<tController>(); //getting butterfly behavior controller and assigning parameters
+        brain.tcon.boundsBox = FlyBox.GetComponent<Collider>();
         brain.tcon.followPath = butterInst;
         brain.wingSpeed = wingspeed;
         brain.flyspeed = flyspeed;

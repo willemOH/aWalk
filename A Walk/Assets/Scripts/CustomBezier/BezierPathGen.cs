@@ -34,35 +34,56 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
     public bool butterfly = false;
     public bool test = false;
 
-    void Awake()
-    {
-     originalTravelRange = travelRange; //copy of travel Range
-     pth = new Bezier();
-        pth.P1 = startLoc;
-        if (tree)
-        {
-            pth.P4 = pth.P1 + new Vector3(0, 1, 0); //up
-            pth.P2 = pth.P1 + new Vector3(0, .25f, 0); 
-        }
-        else if (butterfly)
-        {
-            pth.P4 = pth.P1 + new Vector3(travelRange, 0, 0);
-            pth.P2 = pth.P1 + new Vector3(0, 0, 1); //away from player
-        }
+    public bool initialize = false;
 
-        pth.P3 = pth.P4 + Quaternion.Euler(Random.Range(-x_handleRotMax, x_handleRotMax), //generate amount to rotate p4 distance vector for direction
-                                         Random.Range(-y_handleRotMax, y_handleRotMax),
-                                         Random.Range(-z_handleRotMax, z_handleRotMax)) * (pth.P4 - pth.P1 * handleStrength);
-        //Start Location options selected from within editor
-
-       
-
-    }
 
     private void Update()
     {
-        currentBegin = pth.P1;
-        currentEnd = pth.P4;
+        if (currentBegin != null)
+        {
+           // currentBegin = pth.P1;
+           // currentEnd = pth.P4;
+        }
+        /*
+        if (initialize == true)
+        {
+            StartCoroutine("initialize_pathGen");
+            initialize = false;
+        } */
+    }
+
+    private IEnumerator initialize_pathGen()
+    {
+        originalTravelRange = travelRange; //copy of travel Range
+        pth = new Bezier();
+        pth.P1 = startLoc;
+     //   newCurvePoints();
+
+        if (tree)
+        {
+
+            pth.P4 = pth.P1 + new Vector3(0, 1, 0); //up
+            pth.P2 = pth.P1 + new Vector3(0, .25f, 0);
+        }
+        else if (butterfly)
+        {
+
+            pth.P4 = pth.P1 + new Vector3(0, 0, travelRange);
+            pth.P2 = pth.P1 + new Vector3(0, 0, 1); //away from player
+        }
+        /*
+        pth.P3 = pth.P4 - Quaternion.Euler(Random.Range(-x_handleRotMax, x_handleRotMax), //generate amount to rotate p4 distance vector for direction
+                                         Random.Range(-y_handleRotMax, y_handleRotMax),
+                                         Random.Range(-z_handleRotMax, z_handleRotMax)) * (pth.P4 - pth.P1 * handleStrength);
+        */
+        //quick fix for P3 calculated wrong when P4 isnt (0,1,0) (in this case its like 80) DEFINITLY A PROBLEM FOR RELIABILITY IN SPECIFYING START DIRECTION
+        pth.P3 = (new Vector3(0, 1, 0) - Quaternion.Euler(Random.Range(-x_handleRotMax, x_handleRotMax), //generate amount to rotate p4 distance vector for direction
+                                        Random.Range(-y_handleRotMax, y_handleRotMax),
+                                        Random.Range(-z_handleRotMax, z_handleRotMax)) * (new Vector3(0, 1, 0) - new Vector3(0, 0, 0) * handleStrength)) + pth.P4; ;
+
+        //Start Location options selected from within editor
+
+        yield return null;
     }
     public void newCurvePoints() //generates new collection of points for a curve to be generated from -> P1, P2, P3, P4
     {
@@ -83,7 +104,7 @@ public class BezierPathGen : MonoBehaviour //contains generator parameters and m
                                          Random.Range(-y_handleRotMax, y_handleRotMax),
                                          Random.Range(-z_handleRotMax, z_handleRotMax))
                                          * p4vec.normalized*handleStrength;
-        Vector3 newP3 = newP4 + p3handle ;
+        Vector3 newP3 = newP4 - p3handle ;
 
         pth.P1 = newP1;
         pth.P2 = newP2;
